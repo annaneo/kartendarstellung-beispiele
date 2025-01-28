@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoJSON-Karte mit eingebetteten Daten</title>
+    <!-- Leaflet CSS und JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <style>
+		/* Kartenhöhe definieren */
+		#map {
+			height: 600px;
+		}
+    </style>
+</head>
+
+<body>
+<h1>Kartendarstellung</h1>
+<div id="map"></div>
+
+<!-- GeoJSON-Daten direkt im HTML einfügen -->
+<script>
+    // GeoJSON-Daten: Beispiel für eingebettete Daten (üblicherweise würde man eine solche Datei extern laden
+    /* Was ist JSON?
+    Website: https://www.json.org
+    Erklärung im freecodecamp: https://www.freecodecamp.org/news/what-is-json-a-json-file-example
+    GeoJSON ist ein spezielles Format für Geo-Daten: https://geojson.org
+    */
+    const lastLocation = {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [21.0, 47.0]
+                },
+                "properties": {
+                    "placeName": "Ort A",
+                    "radius": 6,
+                    "popupContent": "Zusätzliche Informationen über Ort A"
+                }
+            },
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [22.0, 48.0]
+                },
+                "properties": {
+                    "placeName": "Ort B",
+                    "radius": 4,
+                    "popupContent": "Zusätzliche Informationen über Ort B"
+                }
+            }
+        ]
+    };
+
+    // Karte initialisieren und Fokus setzen
+    const map = L.map('map').setView([47.5, 21.5], 6);
+
+    // OpenStreetMap-Kartenlayer hinzufügen
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    // Funktion zur Erstellung des Popup-Inhalts
+    const createPopupContent = (feature) => {
+        const placeName = feature.properties.placeName || 'Unbekannter Ort';
+        return `<p><strong>${placeName}</strong></p>` +
+            (feature.properties.popupContent || "");
+    };
+
+    // GeoJSON-Daten als Layer hinzufügen
+    L.geoJSON(lastLocation, {
+        // Punkte als Kreismarker darstellen
+        pointToLayer: (feature, latlng) => L.circleMarker(latlng, {
+            radius: feature.properties.radius || 3,
+            fillColor: 'rgba(6,24,113, 0.6)',
+            color: 'rgba(6,24,113, 1)',
+            weight: 3,
+        }),
+
+        // Popup-Inhalte binden
+        onEachFeature: (feature, layer) => {
+            const popupContent = createPopupContent(feature);
+            layer.bindPopup(popupContent);
+        }
+    }).addTo(map);
+</script>
+</body>
+
+</html>

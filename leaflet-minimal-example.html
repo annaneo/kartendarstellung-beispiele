@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de">
+<!-- Minimalbeispiel für eine Karteneinbindung. Folgt dem Quick-Start Guide https://leafletjs.com/examples/quick-start/ -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Leaflet CSS & JavaScript einbinden -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <!-- Kartenhöhe definieren; zwingend erforderlich: wenn keine Größe für die Karte angegeben ist, wird nichts angezeigt -->
+    <style>
+		#map {
+			height: 600px;
+		}
+    </style>
+</head>
+<body>
+<h1>Kartendarstellung</h1>
+<div id="map"></div>
+<script>
+    // Fokus der Karte auf Ungarn setzen
+    var map = L.map('map').setView([47, 21], 6);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    // Marker mit Ort zur Karte hinzufügen; Koordinaten: Latitude, Longitude
+    var marker = L.marker([47.5, 19.05]).addTo(map).bindPopup("Budapest");
+    // weitere Orte hier in gleicher Form angeben
+</script>
+</body>
+</html>
+
+    
